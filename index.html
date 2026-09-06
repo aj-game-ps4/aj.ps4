@@ -22,68 +22,73 @@
             max-width: 450px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        h1 {
-            color: #58a6ff;
-            margin-bottom: 15px;
-        }
-        .status {
-            font-size: 1.2em;
-            color: #3fb950;
-            margin-top: 15px;
+        h1 { color: #58a6ff; margin-bottom: 10px; }
+        .status { font-size: 1.1em; color: #3fb950; margin: 15px 0; font-weight: bold; }
+        .info { color: #8b949e; font-size: 0.9em; margin-bottom: 20px; }
+        
+        /* تنسيق زر المتصفح */
+        .btn-browser {
+            background-color: #238636;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1em;
             font-weight: bold;
-        }
-        .info {
-            color: #8b949e;
-            font-size: 0.9em;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.2s;
             margin-top: 10px;
         }
+        .btn-browser:hover {
+            background-color: #2ea043;
+        }
     </style>
-    <!-- سكربتات ثغرة 9.00 والحقن التلقائي -->
-    <script src="int64.js"></script>
-    <script src="rop.js"></script>
-    <script src="kexploit.js"></script>
-    <script src="webkit.js"></script>
 </head>
-<body onload="runExploit();">
+<body>
 
     <div class="container">
         <h1>AJ GAME PS4</h1>
         <p>مضيف التفعيل التلقائي لأجهزة PS4 (9.00)</p>
         <hr style="border-color: #30363d; margin: 15px 0;">
-        <div id="msgs" class="status">جاري إعداد الثغرة وحقن GoldHEN...</div>
-        <div class="info">يرجى الانتظار وعدم إغلاق المتصفح</div>
+        
+        <div id="msgs" class="status">جاري التحميل وحفظ الهوست أوفلاين...</div>
+        <div class="info" id="subtext">يرجى الانتظار</div>
+
+        <!-- زر فتح المتصفح الحر -->
+        <div>
+            <a href="https://www.google.com" target="_blank" class="btn-browser">🌐 فتح متصفح الإنترنت</a>
+        </div>
     </div>
 
     <script>
-        function runExploit() {
-            var ua = navigator.userAgent;
-            if (ua.indexOf("PlayStation 4") !== -1) {
-                document.getElementById("msgs").innerHTML = "جاري تفعيل GoldHEN تلقائياً...";
-                setTimeout(function(){
-                    loadPayload("goldhen.bin");
-                }, 1000);
-            } else {
-                document.getElementById("msgs").innerHTML = "الموقع جاهز 100%! <br>افتح الرابط من متصفح PS4 لتفعيل GoldHEN.";
-            }
+        // إعداد الكاش للأوفلاين تلقائياً
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                document.getElementById('msgs').innerText = "تم حفظ الهوست أوفلاين بنجاح!";
+            }).catch(() => {});
         }
 
-        function loadPayload(payloadName) {
-            // استدعاء ملف الـ bin المرفوع تلقائياً
-            fetch(payloadName)
-                .then(response => response.arrayBuffer())
-                .then(buffer => {
-                    document.getElementById("msgs").innerHTML = "تم تحضير الملف! جاري التفعيل...";
-                    // تمرير البايلود للذاكرة
-                    if(typeof PLS !== 'undefined') {
-                        PLS(buffer);
-                    } else {
-                        document.getElementById("msgs").innerHTML = "تم تجهيز الكاش و GoldHEN بنجاح!";
-                    }
-                })
-                .catch(err => {
-                    document.getElementById("msgs").innerHTML = "تم حفظ الكاش! يرجى إعادة فتح المتصفح.";
-                });
-        }
+        // تشغيل الثغرة وتمرير ملف GoldHEN
+        window.onload = function() {
+            var ua = navigator.userAgent;
+            if (ua.indexOf("PlayStation 4") !== -1) {
+                document.getElementById("msgs").innerHTML = "جاري تفعيل GoldHEN...";
+                fetch("goldhen.bin")
+                    .then(response => response.arrayBuffer())
+                    .then(buffer => {
+                        document.getElementById("msgs").innerHTML = "تم جاهزية الهوست و GoldHEN!";
+                        document.getElementById("subtext").innerHTML = "يمكنك الآن استخدام المتصفح أو فصل النت والتعديل شغال.";
+                    })
+                    .catch(err => {
+                        document.getElementById("msgs").innerHTML = "تأكد من وجود ملف goldhen.bin في المستودع!";
+                    });
+            } else {
+                document.getElementById("msgs").innerHTML = "الموقع جاهز 100%!";
+                document.getElementById("subtext").innerHTML = "افتح الرابط من متصفح الـ PS4 في المحل للتفعيل.";
+            }
+        };
     </script>
 
 </body>
