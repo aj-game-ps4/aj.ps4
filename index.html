@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJ Game PS4 Host</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .logo {
+            width: 160px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        h1 { color: #0070d1; margin-bottom: 10px; }
+        .box {
+            border: 1px solid #333;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            max-width: 400px;
+        }
+        .status {
+            margin-top: 15px;
+            color: #2ea44f;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => {
+                    document.getElementById('cache-status').innerText = "تم حفظ الهوست أوفلاين بنجاح!";
+                })
+                .catch(err => {
+                    document.getElementById('cache-status').innerText = "حدث خطأ في التخزين الأوفلاين";
+                });
+        }
+    </script>
+</head>
+<body>
+
+    <div class="box">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1>AJ GAME PS4</h1>
+        <p>مرحباً بك في صفحة التفعيل المخصصة أوفلاين</p>
+        <div id="cache-status" class="status">جاري حفظ الكاش...</div>
+    </div>
+
+</body>
+</html>
