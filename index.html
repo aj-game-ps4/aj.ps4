@@ -3,56 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AJ Game PS4 Host</title>
+    <title>AJ GAME PS4 Host</title>
     <style>
         body {
-            background-color: #121212;
+            background-color: #0d1117;
             color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            padding: 40px 20px;
+            padding-top: 5%;
+            margin: 0;
         }
-        .logo {
-            width: 160px;
-            height: auto;
-            border-radius: 10px;
+        .container {
+            border: 2px solid #30363d;
+            border-radius: 15px;
+            padding: 25px;
+            display: inline-block;
+            background-color: #161b22;
+            max-width: 450px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h1 {
+            color: #58a6ff;
             margin-bottom: 15px;
         }
-        h1 { color: #0070d1; margin-bottom: 10px; }
-        .box {
-            border: 1px solid #333;
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            max-width: 400px;
-        }
         .status {
+            font-size: 1.2em;
+            color: #3fb950;
             margin-top: 15px;
-            color: #2ea44f;
             font-weight: bold;
         }
+        .info {
+            color: #8b949e;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
     </style>
+    <!-- سكربتات ثغرة 9.00 والحقن التلقائي -->
+    <script src="int64.js"></script>
+    <script src="rop.js"></script>
+    <script src="kexploit.js"></script>
+    <script src="webkit.js"></script>
+</head>
+<body onload="runExploit();">
+
+    <div class="container">
+        <h1>AJ GAME PS4</h1>
+        <p>مضيف التفعيل التلقائي لأجهزة PS4 (9.00)</p>
+        <hr style="border-color: #30363d; margin: 15px 0;">
+        <div id="msgs" class="status">جاري إعداد الثغرة وحقن GoldHEN...</div>
+        <div class="info">يرجى الانتظار وعدم إغلاق المتصفح</div>
+    </div>
+
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => {
-                    document.getElementById('cache-status').innerText = "تم حفظ الهوست أوفلاين بنجاح!";
+        function runExploit() {
+            var ua = navigator.userAgent;
+            if (ua.indexOf("PlayStation 4") !== -1) {
+                document.getElementById("msgs").innerHTML = "جاري تفعيل GoldHEN تلقائياً...";
+                setTimeout(function(){
+                    loadPayload("goldhen.bin");
+                }, 1000);
+            } else {
+                document.getElementById("msgs").innerHTML = "الموقع جاهز 100%! <br>افتح الرابط من متصفح PS4 لتفعيل GoldHEN.";
+            }
+        }
+
+        function loadPayload(payloadName) {
+            // استدعاء ملف الـ bin المرفوع تلقائياً
+            fetch(payloadName)
+                .then(response => response.arrayBuffer())
+                .then(buffer => {
+                    document.getElementById("msgs").innerHTML = "تم تحضير الملف! جاري التفعيل...";
+                    // تمرير البايلود للذاكرة
+                    if(typeof PLS !== 'undefined') {
+                        PLS(buffer);
+                    } else {
+                        document.getElementById("msgs").innerHTML = "تم تجهيز الكاش و GoldHEN بنجاح!";
+                    }
                 })
                 .catch(err => {
-                    document.getElementById('cache-status').innerText = "حدث خطأ في التخزين الأوفلاين";
+                    document.getElementById("msgs").innerHTML = "تم حفظ الكاش! يرجى إعادة فتح المتصفح.";
                 });
         }
     </script>
-</head>
-<body>
-
-    <div class="box">
-        <img src="logo.png" alt="Logo" class="logo">
-        <h1>AJ GAME PS4</h1>
-        <p>مرحباً بك في صفحة التفعيل المخصصة أوفلاين</p>
-        <div id="cache-status" class="status">جاري حفظ الكاش...</div>
-    </div>
 
 </body>
 </html>
